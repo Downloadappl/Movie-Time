@@ -1,104 +1,114 @@
-const apiKey = '481a4ece'; // مفتاح API الخاص بك من OMDb
-
-function fetchMoviesByType(type, containerId) {
-    fetch(`https://www.omdbapi.com/?s=${type}&apikey=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // عرض الرد في وحدة التحكم
-            const movies = data.Search;
-            const movieContainer = document.getElementById(containerId);
-            movieContainer.innerHTML = '';
-            if (movies && movies.length > 0) {
-                movies.forEach(movie => {
-                    const movieElement = document.createElement('div');
-                    movieElement.className = 'movie';
-                    movieElement.onclick = () => openModal(movie);
-                    movieElement.innerHTML = `
-                        <img src="${movie.Poster}" alt="${movie.Title}">
-                        <h2>${movie.Title}</h2>
-                        <p>${movie.Year}</p>
-                    `;
-                    movieContainer.appendChild(movieElement);
-                });
-            } else {
-                movieContainer.innerHTML = `<p>لم يتم العثور على أفلام ${type}.</p>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching movies:', error);
-            document.getElementById(containerId).innerHTML = `<p>حدث خطأ أثناء جلب تفاصيل الأفلام ${type}.</p>`;
-        });
+​body {
+    font-family: Arial, sans-serif;
+    background-color: #222;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: right;
+    transition: background-color 0.3s, color 0.3s;
 }
-
-function searchMovies() {
-    const query = document.getElementById('searchInput').value;
-    fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(query)}&apikey=${apiKey}`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // عرض الرد في وحدة التحكم
-            const movies = data.Search;
-            const movieContainer = document.getElementById('searchMovies');
-            movieContainer.innerHTML = '';
-            if (movies && movies.length > 0) {
-                movies.forEach(movie => {
-                    const movieElement = document.createElement('div');
-                    movieElement.className = 'movie';
-                    movieElement.onclick = () => openModal(movie);
-                    movieElement.innerHTML = `
-                        <img src="${movie.Poster}" alt="${movie.Title}">
-                        <h2>${movie.Title}</h2>
-                        <p>${movie.Year}</p>
-                    `;
-                    movieContainer.appendChild(movieElement);
-                });
-            } else {
-                movieContainer.innerHTML = `<p>لم يتم العثور على أفلام أو مسلسلات لـ "${query}".</p>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching movies:', error);
-            document.getElementById('searchMovies').innerHTML = `<p>حدث خطأ أثناء جلب تفاصيل الأفلام.</p>`;
-        });
+.light-mode {
+    background-color: #f0f0f0;
+    color: #333;
 }
-
-function openModal(movie) {
-    document.getElementById('modalPoster').src = movie.Poster;
-    document.getElementById('modalTitle').innerText = movie.Title;
-    document.getElementById('modalYear').innerText = `السنة: ${movie.Year}`;
-    document.getElementById('modalPlot').innerText = movie.Plot || 'لا توجد تفاصيل متاحة.';
-    document.getElementById('modalLink').href = `https://www.imdb.com/title/${movie.imdbID}/`; // رابط لمشاهدة الفيلم على IMDb
-    
-    // ضع رابط تحميل الترجمة إذا كان متاحًا
-    // هذا رابط عام لموقع Subscene كمثال، يمكنك تغييره حسب الحاجة
-    document.getElementById('modalSubtitleLink').href = `https://subscene.com/subtitles/title/${encodeURIComponent(movie.Title)}`;
-    document.getElementById('modalSubtitleLink').style.display = 'block';
-    
-    document.getElementById('movieModal').style.display = 'flex';
+.section {
+    margin-top: 20px;
+    width: 100%;
+    overflow: auto;
 }
-
-function closeModal() {
-    document.getElementById('movieModal').style.display = 'none';
+.section h2 {
+    text-align: center;
+    font-size: 1.5em;
 }
-
-function toggleMode() {
-    document.body.classList.toggle('light-mode');
-    const icon = document.getElementById('modeIcon');
-    if (document.body.classList.contains('light-mode')) {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    } else {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-    }
+.movie-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px;
 }
-
-// تحميل الأفلام عند فتح الصفحة
-window.onload = () => {
-    fetchMoviesByType('action', 'actionMovies');
-    fetchMoviesByType('drama', 'dramaMovies');
-    fetchMoviesByType('comedy', 'comedyMovies');
-    fetchMoviesByType('horror', 'horrorMovies');
-    fetchMoviesByType('adventure', 'adventureMovies');
-    fetchMoviesByType('science fiction', 'sciFiMovies');
-    fetchMoviesByType('series', 'seriesMovies');
-};
+.movie {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 10px;
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.movie:hover {
+    transform: scale(1.05);
+}
+.movie img {
+    width: 100%;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.movie h2 {
+    font-size: 1em;
+    margin: 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+input, button {
+    padding: 10px;
+    margin: 5px;
+}
+.search-container {
+    text-align: center;
+}
+.mode-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: #333;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    color: #fff;
+    text-align: center;
+    position: relative;
+}
+.modal-content img {
+    width: 100%;
+    height: auto;
+}
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #fff;
+}
+a {
+    color: #1e90ff;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+}
+a:hover {
+    text-decoration: underline;
+}
