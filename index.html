@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Movie Time</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="mode-switch" onclick="toggleMode()">
+        <i class="fa-solid fa-sun" id="modeIcon"></i>
+    </div>
+    <h1>Movie Time</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="ابحث عن الأفلام أو المسلسلات...">
+        <button onclick="searchMovies()">بحث</button>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام أكشن</h2>
+        <div class="movie-container" id="actionMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام دراما</h2>
+        <div class="movie-container" id="dramaMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام كوميدي</h2>
+        <div class="movie-container" id="comedyMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام رعب</h2>
+        <div class="movie-container" id="horrorMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام مغامرة</h2>
+        <div class="movie-container" id="adventureMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>أفلام خيال علمي</h2>
+        <div class="movie-container" id="sciFiMovies"></div>
+    </div>
+    
+    <div class="section">
+        <h2>مسلسلات</h2>
+        <div class="movie-container" id="seriesMovies"></div>
+    </div>
+
+    <!-- Modal for movie details -->
+    <div id="movieModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img id="modalPoster" src="" alt="Poster">
+            <h2 id="modalTitle"></h2>
+            <p id="modalYear"></p>
+            <p id="modalPlot"></p>
+            <a id="modalLink" href="" target="_blank">شاهد الفيلم</a>
+            <a id="modalSubtitleLink" href="" target="_blank">تحميل الترجمة</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
